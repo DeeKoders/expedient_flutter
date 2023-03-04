@@ -42,6 +42,7 @@ dependencies:
   charts_flutter: ^0.9.0
   liquid_progress_indicator: ^0.4.0
   shared_preferences: ^2.0.17
+  flutter_launcher_icons: ^0.12.0
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +55,10 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "images/logo.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
