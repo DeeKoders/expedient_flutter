@@ -27,7 +27,7 @@ class _ResourcesState extends State<Resources> {
     String userId = prefs.getInt('user_id').toString();
     final response = await http.get(
       Uri.parse(
-          'http://staging.expedientvms.com/api/clients/$userId/candidates'),
+          'https://staging.api.expedientvms.com/api/clients/$userId/candidates'),
       headers: {
         HttpHeaders.authorizationHeader: "BEARER $token",
       },

@@ -6,7 +6,7 @@ import 'package:expedient_flutter/widgets/drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:expedient_flutter/constants.dart' as constants;
-import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
 
     final response = await http.get(
       Uri.parse(
-          'http://staging.expedientvms.com/api/clients/$userId/dashboard'),
+          'https://staging.api.expedientvms.com/api/clients/$userId/dashboard'),
       headers: {
         HttpHeaders.authorizationHeader: "BEARER $token",
       },
@@ -154,20 +154,33 @@ class _HomeState extends State<Home> {
 
                     // By default, show a loading spinner.
                     return SizedBox(
-                      child: LiquidCircularProgressIndicator(
-                        value: 0.5, // Defaults to 0.5.
-                        valueColor: const AlwaysStoppedAnimation(Colors
-                            .pink), // Defaults to the current Theme's accentColor.
-                        backgroundColor: Colors.grey[
-                            300], // Defaults to the current Theme's backgroundColor.
-                        borderColor: Colors.red,
-                        borderWidth: 5.0,
+                        child: LiquidCircularProgressIndicator(
+                      value: 0.25, // Defaults to 0.5.
+                      valueColor: const AlwaysStoppedAnimation(Colors
+                          .pink), // Defaults to the current Theme's accentColor.
+                      backgroundColor: Colors
+                          .white, // Defaults to the current Theme's backgroundColor.
+                      borderColor: Colors.red,
+                      borderWidth: 5.0,
+                      direction: Axis
+                          .horizontal, // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
+                      center: const Text("Loading..."),
+                    )
 
-                        direction: Axis
-                            .horizontal, // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
-                        center: const Text("Loading..."),
-                      ),
-                    );
+                        // child: LiquidCircularProgressIndicator(
+                        //   value: 0.5, // Defaults to 0.5.
+                        //   valueColor: const AlwaysStoppedAnimation(Colors
+                        //       .pink), // Defaults to the current Theme's accentColor.
+                        //   backgroundColor: Colors.grey[
+                        //       300], // Defaults to the current Theme's backgroundColor.
+                        //   borderColor: Colors.red,
+                        //   borderWidth: 5.0,
+
+                        //   direction: Axis
+                        //       .horizontal, // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
+                        //   center: const Text("Loading..."),
+                        // ),
+                        );
                   },
                 ),
                 SizedBox(

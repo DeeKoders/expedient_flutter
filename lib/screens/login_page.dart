@@ -96,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
         loading = true;
       });
       final response = await http.post(
-          Uri.parse('http://staging.expedientvms.com/api/clients/signIn'),
+          Uri.parse('https://staging.api.expedientvms.com/api/clients/signIn'),
           body: {
             "email": emailController.text,
             "password": passwordController.text

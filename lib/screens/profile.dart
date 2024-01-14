@@ -26,11 +26,12 @@ class _ProfleState extends State<Profle> {
     String userId = prefs.getInt('user_id').toString();
     final response = await http.get(
       Uri.parse(
-          'http://staging.expedientvms.com/api/clients/$userId/profile?fields=id,firstName,lastName,middleName,email,cellPhone,fk_client_role_id'),
+          'https://staging.api.expedientvms.com/api/clients/$userId/profile?fields=id,firstName,lastName,middleName,email,cellPhone,fk_client_role_id'),
       headers: {
         HttpHeaders.authorizationHeader: "BEARER $token",
       },
     );
+    log("LOG${response.body}");
 
     setState(() {
       loading = false;
@@ -269,7 +270,6 @@ class ClientProfile {
     this.updatedAt,
     this.role,
     this.client,
-    this.permissions,
   });
 
   String? fullName;
@@ -311,7 +311,6 @@ class ClientProfile {
   int? updatedAt;
   Role? role;
   Client? client;
-  Permissions? permissions;
 
   factory ClientProfile.fromRawJson(String str) =>
       ClientProfile.fromJson(json.decode(str));
@@ -358,7 +357,6 @@ class ClientProfile {
         updatedAt: json["updatedAt"],
         role: Role.fromJson(json["Role"]),
         client: Client.fromJson(json["client"]),
-        permissions: Permissions.fromJson(json["permissions"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -401,7 +399,6 @@ class ClientProfile {
         "updatedAt": updatedAt,
         "Role": role!.toJson(),
         "client": client!.toJson(),
-        "permissions": permissions!.toJson(),
       };
 }
 
@@ -482,43 +479,6 @@ class Client {
         "teaching": teaching,
         "createdAt": createdAt,
         "updatedAt": updatedAt,
-      };
-}
-
-class Permissions {
-  Permissions({
-    this.orders,
-    this.resources,
-    this.vendors,
-    this.timesheets,
-    this.invoices,
-  });
-
-  Invoices? orders;
-  Invoices? resources;
-  Invoices? vendors;
-  Invoices? timesheets;
-  Invoices? invoices;
-
-  factory Permissions.fromRawJson(String str) =>
-      Permissions.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory Permissions.fromJson(Map<String, dynamic> json) => Permissions(
-        orders: Invoices.fromJson(json["Orders"]),
-        resources: Invoices.fromJson(json["Resources"]),
-        vendors: Invoices.fromJson(json["Vendors"]),
-        timesheets: Invoices.fromJson(json["Timesheets"]),
-        invoices: Invoices.fromJson(json["Invoices"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "Orders": orders!.toJson(),
-        "Resources": resources!.toJson(),
-        "Vendors": vendors!.toJson(),
-        "Timesheets": timesheets!.toJson(),
-        "Invoices": invoices!.toJson(),
       };
 }
 

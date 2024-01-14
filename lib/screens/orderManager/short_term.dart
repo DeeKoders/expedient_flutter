@@ -18,8 +18,9 @@ class ShortTermOrder extends StatefulWidget {
 
 class _ShortTermOrderState extends State<ShortTermOrder> {
   var loading = false;
-  Map<String, dynamic> orders = {};
-  Future<AllOrders> fetchOrders() async {
+  //Map<String, dynamic> orders = {};
+  var orders = [];
+  fetchOrders() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       loading = true;
@@ -28,7 +29,7 @@ class _ShortTermOrderState extends State<ShortTermOrder> {
     String userId = prefs.getInt('user_id').toString();
     final response = await http.get(
       Uri.parse(
-          'http://staging.expedientvms.com/api/clients/$userId/orders?type=Allied,Per%20Diem'),
+          'https://staging.api.expedientvms.com/api/clients/$userId/orders?page=0&size=10&type=Per+Diem,Allied&status=Requested,Confirmed,Void,Recommended'),
       headers: {
         HttpHeaders.authorizationHeader: "BEARER $token",
       },
@@ -37,8 +38,13 @@ class _ShortTermOrderState extends State<ShortTermOrder> {
       loading = false;
     });
     if (response.statusCode == 200) {
-      orders = json.decode(response.body);
-      return AllOrders.fromJson(jsonDecode(response.body));
+      setState(() {
+        orders.add(jsonDecode(response.body));
+      });
+
+      //order.
+      debugPrint(orders.toString());
+      AllOrders.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load ResourcesDetails');
     }
@@ -48,7 +54,7 @@ class _ShortTermOrderState extends State<ShortTermOrder> {
   @override
   void initState() {
     super.initState();
-    futureOrders = fetchOrders();
+    fetchOrders();
   }
 
   @override
@@ -63,7 +69,7 @@ class _ShortTermOrderState extends State<ShortTermOrder> {
               child: CircularProgressIndicator(),
             )
           : ListView.builder(
-              itemCount: orders.length - 1,
+              itemCount: orders.first['data'].length,
               itemBuilder: ((context, index) {
                 return GestureDetector(
                   onTap: () => Navigator.push(
@@ -73,13 +79,18 @@ class _ShortTermOrderState extends State<ShortTermOrder> {
                   child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5.0),
                       child: DataCard(
-                          title: "Order No. ${orders["$index"]["id"]}",
-                          subTitle: orders["$index"]["candidate"] == null
+                          // title: 'Order No. ${orders[index]["id"]}',
+
+                          title:
+                              'Order No. ${orders.first['data'][index]['id']}',
+                          // subTitle: orders["$index"]["candidate"] == null
+                          subTitle: orders.first['data'][index]['candidate'] ==
+                                  null
                               ? 'Candidate: Not Available'
-                              : "Candidate: ${orders["$index"]["candidate"]["firstName"]}",
+                              : "Candidate: ${orders.first['data'][index]['candidate']['firstName']}",
                           extraInfo:
-                              "Client: ${orders["$index"]["client"]["name"]}",
-                          label: "${orders["$index"]["status"]}")),
+                              "Client: ${orders.first['data'][index]['client']['name']}",
+                          label: orders.first['data'][index]['status'])),
                 );
               })),
     );
